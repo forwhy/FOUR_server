@@ -10,7 +10,7 @@ public class HibernateUtil {
 
     static {
         Configuration cfg = new Configuration().configure();
-        //
+        cfg.addAnnotatedClass(Alarm.class);
         StandardServiceRegistryBuilder builder = new StandardServiceRegistryBuilder().applySettings(cfg.getProperties());
 
         sessionFactory = cfg.buildSessionFactory(builder.build());
