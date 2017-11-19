@@ -1,9 +1,13 @@
 package FOUR_server;
 
+import org.hibernate.Session;
+import org.hibernate.Query;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import java.io.Serializable;
+import java.util.List;
+import java.util.Random;
 
 @Entity
 public class Alarm implements Serializable{
@@ -50,6 +54,24 @@ public class Alarm implements Serializable{
         return off_on;
     }
 
+    //////////////////////////////////////
+
+    public static String getReaction(Session s, int timetosleep, boolean off_on)
+    {
+        try {
+            Query q = s.createQuery("FROM Alarm WHERE timeToSleep=" + Integer.toString(timetosleep) + " AND off_on=" + String.valueOf(off_on));
+            List<Alarm> alarms = q.list();
+            int max = alarms.size() - 1;
+            if (max < 0)
+                return "no comment yet";
+            int numOfQuote = (int) (Math.random() * max);
+            return alarms.get(numOfQuote).getQuote();
+        }
+        catch(Exception e)
+        {
+            return "Sorry, it seems some problem with Server, it'll be fixed (maybe)";
+        }
+    }
 
 
 }

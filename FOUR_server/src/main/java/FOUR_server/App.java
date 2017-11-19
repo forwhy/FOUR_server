@@ -1,23 +1,20 @@
 package FOUR_server;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
+import org.junit.runner.JUnitCore;
+import org.junit.runner.Result;
 
-public class App 
+
+
+public class App
 {
-    public static void main( String[] args )
+    public static void main( String[] args )throws Exception
     {
-        System.out.println( "Hello World!" );
-        SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
-        Session session = sessionFactory.openSession();
-        session.beginTransaction();
-        Alarm al = new Alarm();
-        al.setOff_on(true);
-        al.setQuote("just sleep");
-        al.setTimeToSleep(7);
-        session.save(al);
-
-        session.getTransaction().commit();
-        sessionFactory.close();
-        System.out.println( "Bye World!" );
+        JUnitCore runner = new JUnitCore();
+        Result result = runner.run(AlarmTest.class);
+        System.out.println("run tests: " + result.getRunCount());
+        System.out.println("failed tests: " + result.getFailureCount());
+        System.out.println("ignored tests: " + result.getIgnoreCount());
+        System.out.println("success: " + result.wasSuccessful());
     }
 }
+
+
