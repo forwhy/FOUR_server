@@ -39,22 +39,22 @@ public class AlarmTest
     public void getQuoteTest()
     {
         //сессия, часов, вкл/выкл
-        assertTrue(Alarm.getReaction(session,1,true).equals("damn!"));
-        assertTrue(Alarm.getReaction(session,3,true).equals("not enough!"));
+        assertTrue(Alarm.getReactionOn(session,1).equals("damn!"));
+        assertTrue(Alarm.getReactionOn(session,3).equals("not enough!"));
     }
 
     @Test
     public void  getNonExistQuoteTest()
     {
-        assertTrue(Alarm.getReaction(session,10,false).equals("no comment yet"));
-        assertTrue(Alarm.getReaction(session,2,false).equals("no comment yet"));
+        assertTrue(Alarm.getReactionOn(session,10).equals("no comment yet"));
+        assertTrue(Alarm.getReactionOff(session).equals("no comment yet"));
     }
 
 
     @Test
     public void tryWrongSession()
     {
-        assertTrue(Alarm.getReaction(null,10,false).equals("Sorry, it seems some problem with Server, it'll be fixed (maybe)"));
+        assertTrue(Alarm.getReactionOn(null,10).equals("Sorry, it seems some problem with Server, it'll be fixed (maybe)"));
     }
 
 

@@ -56,10 +56,10 @@ public class Alarm implements Serializable{
 
     //////////////////////////////////////
 
-    public static String getReaction(Session s, int timetosleep, boolean off_on)
+    public static String getReactionOn(Session s, int timetosleep)
     {
         try {
-            Query q = s.createQuery("FROM Alarm WHERE timeToSleep=" + Integer.toString(timetosleep) + " AND off_on=" + String.valueOf(off_on));
+            Query q = s.createQuery("FROM Alarm WHERE timeToSleep=" + Integer.toString(timetosleep) + " AND off_on=true");
             List<Alarm> alarms = q.list();
             int max = alarms.size() - 1;
             if (max < 0)
@@ -74,4 +74,17 @@ public class Alarm implements Serializable{
     }
 
 
+    public static String getReactionOff(Session s) {
+        try {
+            Query q = s.createQuery("FROM Alarm WHERE off_on=false");
+            List<Alarm> alarms = q.list();
+            int max = alarms.size() - 1;
+            if (max < 0)
+                return "no comment yet";
+            int numOfQuote = (int) (Math.random() * max);
+            return alarms.get(numOfQuote).getQuote();
+        } catch (Exception e) {
+            return "Sorry, it seems some problem with Server, it'll be fixed (maybe)";
+        }
+    }
 }

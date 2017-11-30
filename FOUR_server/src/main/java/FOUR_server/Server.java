@@ -10,6 +10,8 @@ import java.net.UnknownHostException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Query;
+
+import java.util.Calendar;
 import java.util.List;
 
 
@@ -55,18 +57,69 @@ public class Server implements Runnable {
         SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
         Session session = sessionFactory.openSession();
         int h=0;
-        boolean t=true;
-        String res="";
+        String res="Инвалидная команда";
         try
         {
             String[] com = s.split(" ");
-            h = Integer.valueOf(com[1]);
-            if(com[2].equals("on"))
-                t=true;
-            else t=false;
-            res = Alarm.getReaction(session,h,t);
-            session.beginTransaction();
-            session.getTransaction().commit();
+            //проверяем корректность введённых данных и, если всё хорошо, получаем реакцию из таблицы
+            if(com.length==2)
+            {
+             if(com[0].equals("alarm"))
+             {
+                 //if(com[2].equals("on"))
+                 //{
+                     String [] time = com[1].split(":");
+                     Double minutes=null;
+                     Double hours=null;
+                     if(time.length==2) {
+                         try {
+                             hours = new Double(time[0]);
+                             minutes = new Double(time[1]);
+
+                            if(hours.intValue()==hours.doubleValue() && minutes.intValue()==minutes.doubleValue()) {
+
+
+                         Calendar c=Calendar.getInstance();
+                         int cur_hours = c.get(c.HOUR_OF_DAY);
+                         //получаем интервал до будильника в часах
+                         if(cur_hours<=hours)
+                             h=hours.intValue()-cur_hours;
+                         else
+                             h=24-cur_hours+hours.intValue();
+
+                         res = Alarm.getReactionOn(session, h);
+                         session.beginTransaction();
+                         session.getTransaction().commit();
+                     }
+                         }catch (Exception e){}
+                     }
+
+                     else
+                     {
+                         if(com[1].equals(("off"))) {
+                             res = Alarm.getReactionOff(session);
+                             session.beginTransaction();
+                             session.getTransaction().commit();
+                         }
+                     }
+                    // }
+                 }
+            }
+////            else
+////            {
+////                if(com.length==2)
+////                {
+////                    if(com[0].equals("alarm"))
+////                    {
+////                        if(com[1].equals("off"))
+////                        {
+//                            res = Alarm.getReactionOff(session);
+//                            session.beginTransaction();
+//                            session.getTransaction().commit();
+////                        }
+////                    }
+////                }
+////            }
         }
         catch (Exception e)
         {
