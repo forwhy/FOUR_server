@@ -62,21 +62,18 @@ public class Server implements Runnable {
         {
             String[] com = s.split(" ");
             //проверяем корректность введённых данных и, если всё хорошо, получаем реакцию из таблицы
-            if(com.length==2)
+            if(com.length==3)
             {
-             if(com[0].equals("alarm"))
+             if(com[0].equals("будильник") || com[0].equals("Будильник"))
              {
-                 //if(com[2].equals("on"))
-                 //{
-                     String [] time = com[1].split(":");
-                     Double minutes=null;
-                     Double hours=null;
-                     if(time.length==2) {
-                         try {
-                             hours = new Double(time[0]);
-                             minutes = new Double(time[1]);
 
-                            if(hours.intValue()==hours.doubleValue() && minutes.intValue()==minutes.doubleValue()) {
+                     Integer minutes=null;
+                     Integer hours=null;
+
+                         try
+                         {
+                             hours = new Double(com[1]).intValue();
+                             minutes = new Double(com[2]).intValue();
 
 
                          Calendar c=Calendar.getInstance();
@@ -90,36 +87,22 @@ public class Server implements Runnable {
                          res = Alarm.getReactionOn(session, h);
                          session.beginTransaction();
                          session.getTransaction().commit();
-                     }
-                         }catch (Exception e){}
-                     }
 
-                     else
-                     {
-                         if(com[1].equals(("off"))) {
-                             res = Alarm.getReactionOff(session);
-                             session.beginTransaction();
-                             session.getTransaction().commit();
                          }
+                         catch (Exception e){}
                      }
-                    // }
-                 }
             }
-////            else
-////            {
-////                if(com.length==2)
-////                {
-////                    if(com[0].equals("alarm"))
-////                    {
-////                        if(com[1].equals("off"))
-////                        {
-//                            res = Alarm.getReactionOff(session);
-//                            session.beginTransaction();
-//                            session.getTransaction().commit();
-////                        }
-////                    }
-////                }
-////            }
+            else
+            {
+                if(com[1].equals("выключить") || com[1].equals("Выключить"))
+                {
+                    res = Alarm.getReactionOff(session);
+                    session.beginTransaction();
+                    session.getTransaction().commit();
+                }
+            }
+
+////
         }
         catch (Exception e)
         {
@@ -132,7 +115,6 @@ public class Server implements Runnable {
             //sessionFactory.close();
         }
         return res;
-
     }
 
 
